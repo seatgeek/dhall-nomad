@@ -1,0 +1,25 @@
+---
+global:
+  scrape_interval:     15s
+scrape_configs:
+  - job_name: 'prometheus'
+    scrape_interval: 5s
+    static_configs:
+      - targets: ['localhost:9090']
+
+  - job_name: 'nomad'
+    scrape_interval: 10s
+    metrics_path: /v1/metrics
+    params:
+        format: ['prometheus']
+    consul_sd_configs:
+      - server: '{{ env "NOMAD_IP_prometheus_ui" }}:8500'
+#        token: "c62d8564-c0c5-8dfe-3e75-005debbd0e40"
+        services:
+          - "nomad"
+          - "nomad-client"
+    relabel_configs:
+      - source_labels: ['__meta_consul_tags']
+        regex: .*,http,.*
+        action: keep
+

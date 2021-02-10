@@ -1,0 +1,78 @@
+{
+  "job": {
+    "postgres": {
+      "all_at_once": false,
+      "datacenters": [
+        "default"
+      ],
+      "group": {
+        "db": {
+          "shutdown_delay": "0s",
+          "task": {
+            "postgres": {
+              "config": {
+                "image": "postgres:12",
+                "port_map": {
+                  "db": 5432
+                },
+                "volumes": [
+                  "/postgres:/data/postgres"
+                ]
+              },
+              "driver": "docker",
+              "env": {
+                "PGDATA": "/data/postgres",
+                "POSTGRES_DB": "postgres",
+                "POSTGRES_PASSWORD": "root",
+                "POSTGRES_USER": "postgres"
+              },
+              "resources": {
+                "cpu": 100,
+                "memory": 300,
+                "network": {
+                  "mode": "host",
+                  "port": {
+                    "db": {
+                      "static": 25432
+                    }
+                  }
+                }
+              },
+              "service": [
+                {
+                  "address_mode": "auto",
+                  "check": [
+                    {
+                      "address_mode": "host",
+                      "expose": false,
+                      "grpc_use_tls": false,
+                      "initial_status": "critical",
+                      "interval": "30s",
+                      "method": "GET",
+                      "port": "db",
+                      "timeout": "2s",
+                      "tls_skip_verify": false,
+                      "type": "tcp"
+                    }
+                  ],
+                  "enable_tag_override": false,
+                  "name": "${NOMAD_JOB_NAME}",
+                  "port": "db",
+                  "tags": [
+                    "postgres"
+                  ]
+                }
+              ]
+            }
+          }
+        }
+      },
+      "meta": {
+        "version": "1"
+      },
+      "priority": 50,
+      "region": "us-east-1",
+      "type": "service"
+    }
+  }
+}

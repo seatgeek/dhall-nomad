@@ -1,0 +1,163 @@
+{
+  "job": {
+    "prometheus": {
+      "all_at_once": false,
+      "datacenters": [
+        "dc1"
+      ],
+      "group": {
+        "monitoring": {
+          "count": 1,
+          "ephemeral_disk": {
+            "migrate": false,
+            "size": 1000,
+            "sticky": false
+          },
+          "network": {
+            "mode": "host",
+            "port": {
+              "grafana_ui": {
+                "to": "3000"
+              },
+              "prometheus_ui": {
+                "to": "9090"
+              }
+            }
+          },
+          "restart": {
+            "attempts": 10,
+            "delay": "25s",
+            "interval": "5m",
+            "mode": "delay"
+          },
+          "service": [
+            {
+              "address_mode": "auto",
+              "check": [
+                {
+                  "address_mode": "host",
+                  "expose": false,
+                  "grpc_use_tls": false,
+                  "initial_status": "critical",
+                  "interval": "10s",
+                  "method": "GET",
+                  "name": "prometheus_ui port alive",
+                  "timeout": "2s",
+                  "tls_skip_verify": false,
+                  "type": "tcp"
+                }
+              ],
+              "enable_tag_override": false,
+              "name": "prometheus_ui",
+              "port": "prometheus_ui",
+              "tags": [
+                "urlprefix-/prometheus strip=/prometheus"
+              ]
+            },
+            {
+              "address_mode": "auto",
+              "check": [
+                {
+                  "address_mode": "host",
+                  "expose": false,
+                  "grpc_use_tls": false,
+                  "initial_status": "critical",
+                  "interval": "10s",
+                  "method": "GET",
+                  "name": "grafana_ui port alive",
+                  "timeout": "2s",
+                  "tls_skip_verify": false,
+                  "type": "tcp"
+                }
+              ],
+              "enable_tag_override": false,
+              "name": "grafana_ui",
+              "port": "grafana_ui",
+              "tags": [
+                "urlprefix-/grafana strip=/grafana"
+              ]
+            }
+          ],
+          "shutdown_delay": "0s",
+          "task": {
+            "grafana": {
+              "artifact": [
+                {
+                  "destination": "local/provisioning/dashboards/dashs",
+                  "mode": "any",
+                  "source": "https://example.com/prometheus_nomad.json"
+                }
+              ],
+              "config": {
+                "image": "grafana/grafana:6.1.4",
+                "ports": [
+                  "grafana_ui"
+                ]
+              },
+              "driver": "docker",
+              "env": {
+                "GF_PATHS_PROVISIONING": "/${NOMAD_TASK_DIR}/provisioning",
+                "GF_SERVER_ROOT_URL": "http://127.0.0.1:9999/grafana/"
+              },
+              "resources": {
+                "cpu": 100,
+                "memory": 300
+              },
+              "template": [
+                {
+                  "change_mode": "noop",
+                  "data": "apiVersion: 1\n\nproviders:\n- name: 'default'\n  orgId: 1\n  folder: ''\n  type: file\n  disableDeletion: false\n  updateIntervalSeconds: 10 #how often Grafana will scan for changed dashboards\n  options:\n    path: {{ env \"NOMAD_TASK_DIR\" }}/provisioning/dashboards/dashs\n",
+                  "destination": "local/provisioning/dashboards/file_provider.yml"
+                },
+                {
+                  "change_mode": "noop",
+                  "data": "apiVersion: 1\n\ndatasources:\n  - name: Prometheus\n    type: prometheus\n    access: proxy\n    url: http://{{ env \"NOMAD_ADDR_prometheus_ui\" }}\n\n",
+                  "destination": "local/provisioning/datasources/prometheus_datasource.yml"
+                }
+              ]
+            },
+            "prometheus": {
+              "config": {
+                "args": [
+                  "--web.external-url=http://127.0.0.1:9999/prometheus",
+                  "--web.route-prefix=/",
+                  "--config.file=/local/prometheus.yml"
+                ],
+                "image": "prom/prometheus:v2.9.1",
+                "ports": [
+                  "prometheus_ui"
+                ]
+              },
+              "driver": "docker",
+              "resources": {
+                "cpu": 500,
+                "memory": 256
+              },
+              "template": [
+                {
+                  "change_mode": "noop",
+                  "data": "---\nglobal:\n  scrape_interval:     15s\nscrape_configs:\n  - job_name: 'prometheus'\n    scrape_interval: 5s\n    static_configs:\n      - targets: ['localhost:9090']\n\n  - job_name: 'nomad'\n    scrape_interval: 10s\n    metrics_path: /v1/metrics\n    params:\n        format: ['prometheus']\n    consul_sd_configs:\n      - server: '{{ env \"NOMAD_IP_prometheus_ui\" }}:8500'\n#        token: \"c62d8564-c0c5-8dfe-3e75-005debbd0e40\"\n        services:\n          - \"nomad\"\n          - \"nomad-client\"\n    relabel_configs:\n      - source_labels: ['__meta_consul_tags']\n        regex: .*,http,.*\n        action: keep\n\n",
+                  "destination": "local/prometheus.yml"
+                }
+              ]
+            }
+          }
+        }
+      },
+      "priority": 50,
+      "region": "global",
+      "type": "service",
+      "update": {
+        "auto_promote": false,
+        "auto_revert": false,
+        "canary": 0,
+        "health_check": "checks",
+        "healthy_deadline": "3m",
+        "max_parallel": 1,
+        "min_healthy_time": "10s",
+        "progress_deadline": "10m",
+        "stagger": "30s"
+      }
+    }
+  }
+}
