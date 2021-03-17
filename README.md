@@ -37,7 +37,7 @@ used in the authoring of maintainable job specification files.
 ## How to use
 
 Some examples on how to compose job files with this package can be found in the
-[examples](/tree/master/examples) folder.
+[examples](/examples) folder.
 
 You can import this package from your custom `dhall` files and, for instance,
 create a function to create a service stanza that conforms to your organization
