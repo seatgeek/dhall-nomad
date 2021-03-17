@@ -7,7 +7,6 @@ let default =
       , left_delimiter = None Text
       , perms = None Text
       , right_delimiter = None Text
-      , env = False
       }
 
 let new = Template.Type.InlineTemplateNoop
