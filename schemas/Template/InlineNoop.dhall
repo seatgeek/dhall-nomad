@@ -11,4 +11,19 @@ let default =
 
 let new = Template.Type.InlineTemplateNoop
 
-in  { Type = Template.NoopInlineConfig, default, new }
+let Inline = { Type = Template.NoopInlineConfig, default, new }
+
+let example0 =
+        assert
+      :   Inline.new
+            Inline::{ data = "file contents", destination = "/my/dest" }
+        ≡ Template.Type.InlineTemplateNoop
+            { change_mode = changeMode.noop
+            , left_delimiter = None Text
+            , right_delimiter = None Text
+            , perms = None Text
+            , data = "file contents"
+            , destination = "/my/dest"
+            }
+
+in  Inline

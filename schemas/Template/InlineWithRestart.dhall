@@ -13,4 +13,21 @@ let default =
 
 let new = Template.Type.InlineTemplateWithRestart
 
-in  { Type = Template.RestartInlineConfig, default, new }
+let Inline = { Type = Template.RestartInlineConfig, default, new }
+
+let example0 =
+        assert
+      :   Inline.new
+            Inline::{ data = "file contents", destination = "/my/dest" }
+        ≡ Template.Type.InlineTemplateWithRestart
+            { change_mode = changeMode.restart
+            , left_delimiter = None Text
+            , right_delimiter = None Text
+            , perms = None Text
+            , data = "file contents"
+            , destination = "/my/dest"
+            , env = False
+            , splay = None Text
+            }
+
+in  Inline

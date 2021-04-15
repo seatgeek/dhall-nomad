@@ -7,9 +7,22 @@ let default =
       , left_delimiter = None Text
       , perms = None Text
       , right_delimiter = None Text
-      , env = False
       }
 
 let new = Template.Type.FileTemplateNoop
 
-in  { Type = Template.NoopFileConfig, default, new }
+let File = { Type = Template.NoopFileConfig, default, new }
+
+let example0 =
+        assert
+      :   File.new File::{ source = "/my/file", destination = "/my/dest" }
+        ≡ Template.Type.FileTemplateNoop
+            { change_mode = changeMode.noop
+            , left_delimiter = None Text
+            , perms = None Text
+            , right_delimiter = None Text
+            , source = "/my/file"
+            , destination = "/my/dest"
+            }
+
+in  File

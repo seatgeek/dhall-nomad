@@ -8,9 +8,29 @@ let default =
       , left_delimiter = None Text
       , perms = None Text
       , right_delimiter = None Text
-      , env = False
       }
 
 let new = Template.Type.InlineTemplateWithSignal
 
-in  { Type = Template.SignalInlineConfig, default, new }
+let Inline = { Type = Template.SignalInlineConfig, default, new }
+
+let example0 =
+        assert
+      :   Inline.new
+            Inline::{
+            , data = "file contents"
+            , destination = "/my/dest"
+            , change_signal = "SIGHUP"
+            }
+        ≡ Template.Type.InlineTemplateWithSignal
+            { change_mode = changeMode.signal
+            , left_delimiter = None Text
+            , right_delimiter = None Text
+            , perms = None Text
+            , data = "file contents"
+            , destination = "/my/dest"
+            , splay = None Text
+            , change_signal = "SIGHUP"
+            }
+
+in  Inline
