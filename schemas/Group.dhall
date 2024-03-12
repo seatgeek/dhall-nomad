@@ -18,6 +18,6 @@ in  { Type = ../types/Group.dhall
       , stop_after_client_disconnect = None Text
       , update = None ../types/Update.dhall
       , vault = None ../types/Vault.dhall
-      , volume = None (List ../types/Volume.dhall)
+      , volume = None (Map Text ../types/Volume.dhall)
       }
     }
