@@ -14,6 +14,7 @@ let default =
       , lifecycle = None ../types/Lifecycle.dhall
       , logs = None ../types/Logs.dhall
       , meta = None (Map Text Text)
+      , restart = None ../types/Restart.dhall
       , service = None (List ../types/Service.dhall)
       , shutdown_delay = None Text
       , user = None Text

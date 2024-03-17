@@ -18,5 +18,5 @@ in  { affinity : Optional (List ./Affinity.dhall)
     , task : Map Text ./Task.dhall
     , update : Optional ./Update.dhall
     , vault : Optional ./Vault.dhall
-    , volume : Optional (List ./Volume.dhall)
+    , volume : Optional (Map Text ./Volume.dhall)
     }
