@@ -10,7 +10,8 @@ https://www.nomadproject.io/docs/drivers/docker#deprecated-port_map-syntax
 -}
 let Map = (../Prelude.dhall).Map.Type
 
-in  { cpu : Natural
+in  { cpu : Optional Natural
+    , cores : Optional Natural
     , memory : Natural
     , network : Optional ./Network.dhall
     , device : Optional (Map Text ./Device.dhall)
