@@ -6,6 +6,7 @@ in  { Type = ../types/Service.dhall
     , default =
       { check = None (List ../types/Check.dhall)
       , port = None Text
+      , provider = None Text
       , tags = None (List Text)
       , canary_tags = None (List Text)
       , enable_tag_override = False

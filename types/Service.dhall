@@ -4,6 +4,7 @@ let Map = (../Prelude.dhall).Map.Type
 in  { check : Optional (List ./Check.dhall)
     , name : Text
     , port : Optional Text
+    , provider : Optional Text
     , tags : Optional (List Text)
     , canary_tags : Optional (List Text)
     , enable_tag_override : Bool
