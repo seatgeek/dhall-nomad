@@ -2,6 +2,7 @@
 let Map = (../Prelude.dhall).Map.Type
 
 in  { check : Optional (List ./Check.dhall)
+    , connect : Optional ./Connect.dhall
     , name : Text
     , port : Optional Text
     , provider : Optional Text
