@@ -20,7 +20,7 @@ let default =
       , user = None Text
       , template = None (List Template)
       , vault = None ../types/Vault.dhall
-      , volume_mount = None ../types/VolumeMount.dhall
+      , volume_mount = None (List ../types/VolumeMount.dhall)
       }
 
 in  { Type = ../types/Task.dhall, default, Config = ./TaskConfig.dhall }

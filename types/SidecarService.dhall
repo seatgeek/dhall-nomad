@@ -4,6 +4,6 @@ let Map = (../Prelude.dhall).Map.Type
 in  { disable_default_tcp_check : Optional Bool
     , meta : Optional (Map Text Text)
     , port : Optional Text
-    , proxy : Optional ./Proxy.dhall
+    , proxy : Optional ./SidecarProxy.dhall
     , tags : Optional (List Text)
     }

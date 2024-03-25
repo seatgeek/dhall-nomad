@@ -1,2 +1,2 @@
 {- https://developer.hashicorp.com/nomad/docs/job-specification/expose -}
-{ path : ./Path.dhall }
+{ path : List ./SidecarProxyExposePath.dhall }
