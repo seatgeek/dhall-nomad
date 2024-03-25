@@ -9,7 +9,7 @@ in  { check : Optional (List ./Check.dhall)
     , tags : Optional (List Text)
     , canary_tags : Optional (List Text)
     , enable_tag_override : Bool
-    , address_mode : ./AddressMode.dhall
+    , address_mode : Optional ./AddressMode.dhall
     , task : Optional Text
     , meta : Optional (Map Text Text)
     , canary_meta : Optional (Map Text Text)

@@ -65,7 +65,7 @@ let prometheusTask =
               ]
             , ports = Some [ ports.prometheus_ui.name ]
             }
-      , resources = nomad.Resources::{ cpu = 500, memory = 256 }
+      , resources = nomad.Resources::{ cpu = Some 500, memory = 256 }
       }
 
 let prometheus =
@@ -89,6 +89,7 @@ let prometheus =
               , mode = nomad.Restart.Mode.delay
               }
             , network = Some nomad.Network::{
+              , mode = nomad.Network.Mode.host
               , port = Some
                 [ { mapKey = ports.prometheus_ui.name
                   , mapValue = nomad.Port::{ to = Some ports.prometheus_ui.to }
