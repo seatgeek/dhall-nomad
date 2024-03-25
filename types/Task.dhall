@@ -23,5 +23,5 @@ in  { artifact : Optional (List ./Artifact.dhall)
     , user : Optional Text
     , template : Optional (List Template)
     , vault : Optional ./Vault.dhall
-    , volume_mount : Optional ./VolumeMount.dhall
+    , volume_mount : Optional (List ./VolumeMount.dhall)
     }
