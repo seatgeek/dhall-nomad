@@ -46,6 +46,7 @@ let postgres =
                     ]
                   , resources = nomad.Resources::{
                     , network = Some nomad.Network::{
+                      , mode = nomad.Network.Mode.host
                       , port = Some
                         [ { mapKey = port.name
                           , mapValue = nomad.Port::{ static = Some port.from }

@@ -17,10 +17,11 @@ in  { artifact : Optional (List ./Artifact.dhall)
     , logs : Optional ./Logs.dhall
     , meta : Optional (Map Text Text)
     , resources : ./Resources.dhall
+    , restart : Optional ./Restart.dhall
     , service : Optional (List ./Service.dhall)
     , shutdown_delay : Optional Text
     , user : Optional Text
     , template : Optional (List Template)
     , vault : Optional ./Vault.dhall
-    , volume_mount : Optional ./VolumeMount.dhall
+    , volume_mount : Optional (List ./VolumeMount.dhall)
     }
